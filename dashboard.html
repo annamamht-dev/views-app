@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIEWS - Espace Commercial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="header-left">
+            <img src="images/logo_views.jpg" alt="VIEWS" class="app-logo">
+        </div>
+        <div class="header-right">
+            <div class="user-profile">
+                <span class="user-name">Bonjour, Thomas</span>
+                <div class="avatar">T</div>
+            </div>
+        </div>
+    </header>
+
+    <section class="kpi-section">
+        <div class="kpi-card">
+            <span class="kpi-label">CA du mois</span>
+            <span class="kpi-value">12 450 €</span>
+        </div>
+        <div class="kpi-card">
+            <span class="kpi-label">Ventes</span>
+            <span class="kpi-value">8</span>
+        </div>
+    </section>
+
+    <main class="leads-container">
+        <h2 class="section-title">Nouveaux Prospects</h2>
+        
+        <div class="leads-list">
+            
+            <div class="lead-card status-new" data-lead-id="lead1" onclick="openLeadDetails('lead1')">
+                <div class="lead-info">
+                    <h3 class="lead-name">Sophie Martin</h3>
+                    <span class="lead-time">Il y a 2h</span>
+                </div>
+                <div class="lead-status">
+                    <span class="status-dot"></span> <span class="status-text">Nouveau</span>
+                </div>
+                <div class="lead-action">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="lead-card status-pending" data-lead-id="lead2" onclick="openLeadDetails('lead2')">
+                <div class="lead-info">
+                    <h3 class="lead-name">Jean Dupont</h3>
+                    <span class="lead-time">Hier</span>
+                </div>
+                <div class="lead-status">
+                    <span class="status-dot"></span> <span class="status-text">En cours</span>
+                </div>
+                <div class="lead-action">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="lead-card status-success" data-lead-id="lead3" onclick="openLeadDetails('lead3')">
+                <div class="lead-info">
+                    <h3 class="lead-name">Claire Fontaine</h3>
+                    <span class="lead-time">24 Oct.</span>
+                </div>
+                <div class="lead-status">
+                    <span class="status-dot"></span> <span class="status-text">Vente</span>
+                </div>
+                <div class="lead-action">
+                    <span class="sale-amount">+1 200€</span>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="leadModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close-btn" onclick="closeLeadDetails()"><i class="fa-solid fa-arrow-left"></i> Retour</button>
+                <span class="modal-title">Détail Prospect</span>
+            </div>
+            
+            <div class="modal-body">
+                <div class="client-header">
+                    <h2 id="modalName">Sophie Martin</h2>
+                    <p class="client-contact">06 12 34 56 78</p>
+                    <p class="client-contact">sophie.martin@email.com</p>
+                </div>
+
+                <div class="quick-actions">
+                    <button class="action-btn whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                    <button class="action-btn phone"><i class="fa-solid fa-phone"></i> Appeler</button>
+                </div>
+
+                <div class="modal-section">
+                    <h3>Documents reçus</h3>
+                    <div class="doc-list">
+                        <div class="doc-item"><i class="fa-regular fa-file-pdf"></i> Carte Mutuelle</div>
+                        <div class="doc-item"><i class="fa-regular fa-file-pdf"></i> Garanties</div>
+                        <div class="doc-item"><i class="fa-regular fa-file-image"></i> Ordonnance</div>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h3>Mettre à jour le statut</h3>
+                    <select class="status-select" id="statusSelect">
+                        <option value="new">Nouveau</option>
+                        <option value="pending">En cours de traitement</option>
+                        <option value="success">Vente Validée</option>
+                        <option value="archive">Archivé / Sans suite</option>
+                    </select>
+                </div>
+
+                <button class="save-btn">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item active">
+            <i class="fa-solid fa-users"></i>
+            <span>Prospects</span>
+        </a>
+        <a href="stats.html" class="nav-item">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Stats</span>
+        </a>
+        <a href="compte.html" class="nav-item">
+            <i class="fa-solid fa-gear"></i>
+            <span>Compte</span>
+        </a>
+    </nav>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

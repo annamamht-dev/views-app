@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIEWS - Mon Compte</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Styles spécifiques à la page Compte */
+        .account-container {
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .account-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .account-avatar {
+            width: 100px;
+            height: 100px;
+            background: var(--accent-white);
+            color: var(--bg-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 36px;
+            margin: 0 auto 15px;
+        }
+
+        .account-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .account-role {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .account-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .account-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .account-item:active {
+            transform: scale(0.98);
+            background: #333;
+        }
+
+        .account-item-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .account-item-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .account-item-info h3 {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .account-item-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .account-item-right {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .account-item-right i {
+            font-size: 12px;
+        }
+
+        .logout-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:active {
+            transform: scale(0.98);
+            background: rgba(255, 77, 77, 0.1);
+        }
+
+        .switch {
+            position: relative;
+            width: 50px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .switch.active {
+            background: var(--accent-white);
+        }
+
+        .switch-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 22px;
+            height: 22px;
+            background: var(--bg-dark);
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .switch.active .switch-slider {
+            transform: translateX(22px);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="header-left">
+            <img src="images/logo_views.jpg" alt="VIEWS" class="app-logo">
+        </div>
+        <div class="header-right">
+            <div class="user-profile">
+                <span class="user-name">Bonjour, Thomas</span>
+                <div class="avatar">T</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="account-container">
+        <div class="account-header">
+            <div class="account-avatar">T</div>
+            <div class="account-name">Thomas Dubois</div>
+            <div class="account-role">Commercial Senior</div>
+        </div>
+
+        <div class="account-section">
+            <div class="section-title">Informations personnelles</div>
+            
+            <div class="account-item">
+                <div class="account-item-left">
+                    <div class="account-item-icon">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div class="account-item-info">
+                        <h3>Nom complet</h3>
+                        <p>Thomas Dubois</p>
+                    </div>
+                </div>
+                <div class="account-item-right">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="account-item">
+                <div class="account-item-left">
+                    <div class="account-item-icon">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <div class="account-item-info">
+                        <h3>Email</h3>
+                        <p>thomas.dubois@views.fr</p>
+                    </div>
+                </div>
+                <div class="account-item-right">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="account-item">
+                <div class="account-item-left">
+                    <div class="account-item-icon">
+                        <i class="fa-solid fa-phone"></i>
+                    </div>
+                    <div class="account-item-info">
+                        <h3>Téléphone</h3>
+                        <p>06 12 34 56 78</p>
+                    </div>
+                </div>
+                <div class="account-item-right">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="account-section">
+            <div class="section-title">Paramètres</div>
+            
+            <div class="account-item">
+                <div class="account-item-left">
+                    <div class="account-item-icon">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <div class="account-item-info">
+                        <h3>Notifications</h3>
+                        <p>Recevoir les alertes de nouveaux prospects</p>
+                    </div>
+                </div>
+                <div class="account-item-right">
+                    <div class="switch active">
+                        <div class="switch-slider"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="account-item">
+                <div class="account-item-left">
+                    <div class="account-item-icon">
+                        <i class="fa-solid fa-moon"></i>
+                    </div>
+                    <div class="account-item-info">
+                        <h3>Mode sombre</h3>
+                        <p>Thème de l'application</p>
+                    </div>
+                </div>
+                <div class="account-item-right">
+                    <div class="switch active">
+                        <div class="switch-slider"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="account-item">
+                <div class="account-item-left">
+                    <div class="account-item-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div class="account-item-info">
+                        <h3>Confidentialité</h3>
+                        <p>Gérer vos données personnelles</p>
+                    </div>
+                </div>
+                <div class="account-item-right">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="account-section">
+            <div class="section-title">Aide & Support</div>
+            
+            <div class="account-item">
+                <div class="account-item-left">
+                    <div class="account-item-icon">
+                        <i class="fa-solid fa-circle-question"></i>
+                    </div>
+                    <div class="account-item-info">
+                        <h3>Centre d'aide</h3>
+                        <p>FAQ et documentation</p>
+                    </div>
+                </div>
+                <div class="account-item-right">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="account-item">
+                <div class="account-item-left">
+                    <div class="account-item-icon">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <div class="account-item-info">
+                        <h3>Contacter le support</h3>
+                        <p>Besoin d'assistance ?</p>
+                    </div>
+                </div>
+                <div class="account-item-right">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="account-item">
+                <div class="account-item-left">
+                    <div class="account-item-icon">
+                        <i class="fa-solid fa-info-circle"></i>
+                    </div>
+                    <div class="account-item-info">
+                        <h3>À propos</h3>
+                        <p>Version 1.0.0</p>
+                    </div>
+                </div>
+                <div class="account-item-right">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+
+        <button class="logout-btn">
+            <i class="fa-solid fa-right-from-bracket"></i> Se déconnecter
+        </button>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fa-solid fa-users"></i>
+            <span>Prospects</span>
+        </a>
+        <a href="stats.html" class="nav-item">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Stats</span>
+        </a>
+        <a href="compte.html" class="nav-item active">
+            <i class="fa-solid fa-gear"></i>
+            <span>Compte</span>
+        </a>
+    </nav>
+
+    <script>
+        // Gestion des switches
+        document.querySelectorAll('.switch').forEach(switchEl => {
+            switchEl.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+
+        // Gestion du bouton de déconnexion
+        document.querySelector('.logout-btn').addEventListener('click', function() {
+            if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+                // Ici, on pourrait rediriger vers la page de connexion
+                alert('Déconnexion...');
+            }
+        });
+    </script>
+</body>
+</html>
+
