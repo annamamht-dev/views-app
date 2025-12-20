@@ -149,7 +149,7 @@ function resetUploads() {
 }
 
 function showSuccessMessage() {
-    // Modale Monochrome
+    // Création de la Modale "Merci" (Style Noir & Blanc)
     const modal = document.createElement('div');
     modal.style.cssText = `
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -162,13 +162,15 @@ function showSuccessMessage() {
             <div style="font-size: 50px; margin-bottom: 20px;">✓</div>
             <h2 style="font-size: 24px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px;">Merci</h2>
             <p style="color: #aaa;">Vos documents ont bien été transmis.</p>
+            <p style="color: #666; font-size: 12px; margin-top: 20px;">Redirection vers l'espace vendeur...</p>
         </div>
     `;
     
     document.body.appendChild(modal);
     
+    // --- C'EST ICI QUE LA MAGIE OPÈRE ---
     setTimeout(() => {
-        modal.style.opacity = '0';
-        setTimeout(() => modal.remove(), 500);
-    }, 3000);
+        // Au bout de 2.5 secondes, on redirige vers le dashboard
+        window.location.href = 'dashboard.html';
+    }, 2500);
 }
