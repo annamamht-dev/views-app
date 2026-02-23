@@ -1,0 +1,244 @@
+/* ============================================
+   VIEWS - DESIGN MONOCHROME (NOIR & BLANC)
+   ============================================ */
+
+   :root {
+    --bg-dark: #1e1e1e;       /* Noir profond */
+    --bg-darker: #000000;     /* Noir pur */
+    --text-primary: #ffffff;  /* Blanc pur */
+    --text-secondary: #aaaaaa; /* Gris clair */
+    
+    /* THEME NOIR & BLANC */
+    --accent-color: #ffffff;  /* L'accent est maintenant BLANC */
+    --accent-color-hover: #d4d4d4;
+    --accent-bg-light: rgba(255, 255, 255, 0.08);
+    
+    --border-color: rgba(255, 255, 255, 0.2); 
+    --error-color: #ff4d4d;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 20px 10px;
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.container { width: 100%; max-width: 650px; padding: 20px; }
+
+/* --- HEADER --- */
+.header { text-align: center; margin-bottom: 40px; }
+.logo-container { margin-bottom: 20px; }
+.logo { max-width: 140px; height: auto; display: block; margin: 0 auto; }
+.title {
+    font-size: 20px; font-weight: 500; letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 8px; color: var(--text-primary);
+}
+.subtitle { font-size: 13px; color: var(--text-secondary); font-weight: 300; }
+
+/* --- FORMULAIRE --- */
+.premium-form { display: flex; flex-direction: column; gap: 25px; }
+.form-row { display: flex; gap: 20px; }
+@media (max-width: 600px) { .form-row { flex-direction: column; gap: 25px; } }
+.form-group { position: relative; width: 100%; }
+
+/* Inputs */
+.form-input, .form-textarea {
+    width: 100%; background: transparent; border: none;
+    border-bottom: 1px solid var(--border-color);
+    border-bottom-width: 1px;
+    color: var(--text-primary); font-family: 'Poppins', sans-serif;
+    font-size: 15px; padding: 10px 0; outline: none; 
+    transition: border-bottom-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border-bottom-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.form-input:focus, .form-textarea:focus { 
+    border-bottom-color: var(--accent-color);
+    border-bottom-width: 2px;
+}
+
+/* Labels */
+.form-input::placeholder, .form-textarea::placeholder { color: transparent; }
+.form-label {
+    position: absolute; left: 0; top: 10px; color: var(--text-secondary);
+    font-size: 14px; pointer-events: none; transition: var(--transition);
+    transform-origin: left top;
+}
+.form-input:focus + .form-label,
+.form-input:not(:placeholder-shown) + .form-label,
+.form-textarea:focus + .form-label,
+.form-textarea:not(:placeholder-shown) + .form-label {
+    transform: translateY(-22px) scale(0.85); color: var(--accent-color);
+}
+
+/* --- UPLOAD GRID (3 ÉLÉMENTS) --- */
+.documents-section { margin-top: 10px; }
+.section-label { font-size: 12px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 15px; letter-spacing: 1px; }
+
+.upload-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+}
+/* Astuce CSS : Si le dernier élément est impair (le 3ème), il prend toute la largeur */
+.upload-grid > .upload-zone:last-child:nth-child(odd) {
+    grid-column: span 2;
+}
+@media (max-width: 500px) {
+    .upload-grid { grid-template-columns: 1fr; }
+    .upload-grid > .upload-zone:last-child:nth-child(odd) { grid-column: span 1; }
+}
+
+.upload-zone {
+    position: relative; border: 1px solid var(--border-color);
+    border-radius: 8px; padding: 30px 15px; text-align: center;
+    background: var(--accent-bg-light); transition: var(--transition);
+    cursor: pointer;
+}
+.upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--accent-color); background: rgba(255, 255, 255, 0.15);
+}
+.upload-zone.has-file {
+    border-color: var(--accent-color);
+    border-width: 2px;
+    background: rgba(255, 255, 255, 0.1);
+}
+.file-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.upload-icon { width: 32px; height: 32px; margin-bottom: 10px; color: var(--accent-color); transition: var(--transition); }
+.upload-text { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.upload-hint { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+.file-name { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 8px;
+    font-size: 12px; 
+    color: var(--accent-color); 
+    margin-top: 10px; 
+    font-weight: 500; 
+}
+.file-name::before {
+    content: '✓';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    background: var(--accent-color);
+    color: var(--bg-dark);
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.upload-zone.has-file .file-name::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* --- BOUTON (Monochrome & Fin) --- */
+.submit-button {
+    background: var(--accent-color); /* Blanc */
+    color: var(--bg-dark); /* Noir */
+    border: none;
+    padding: 14px 28px;
+    height: auto; max-width: 300px; width: 100%;
+    font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    border-radius: 4px; cursor: pointer; transition: var(--transition);
+    display: flex; align-items: center; justify-content: center; gap: 15px;
+    margin: 30px auto 0;
+}
+.submit-button:hover {
+    background: var(--accent-color-hover); transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+}
+.submit-icon {
+    width: 18px !important; height: 18px !important;
+    flex-shrink: 0; display: block;
+}
+
+/* --- FOOTER --- */
+.footer { margin-top: 50px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 20px; }
+.rgpd-text { font-size: 11px; color: var(--text-secondary); line-height: 1.6; }
+
+/* Validation */
+.form-input.invalid, .form-textarea.invalid { 
+    border-bottom-color: var(--error-color);
+    border-bottom-width: 2px;
+    animation: shake 0.5s ease-in-out;
+    text-decoration: underline;
+    text-decoration-color: var(--error-color);
+    text-underline-offset: 4px;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* --- SECTION PARTENAIRES (FOOTER) --- */
+.partners-section {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border-color); /* Séparation fine avec le RGPD */
+}
+
+.partners-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-secondary); /* Gris discret */
+    margin-bottom: 20px;
+}
+
+.partners-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px; /* Espace entre les logos */
+    flex-wrap: wrap; /* Pour que ça passe bien sur mobile */
+}
+
+.partner-logo {
+    height: 25px; /* Taille discrète et élégante */
+    width: auto;
+    object-fit: contain;
+    opacity: 0.6; /* Un peu transparent pour l'élégance */
+    transition: var(--transition);
+    filter: brightness(0) invert(1); /* FORCE LE LOGO EN BLANC */
+    mix-blend-mode: screen; /* Alternative pour forcer le blanc sur fond noir */
+}
+
+.partner-logo:hover {
+    opacity: 1; /* Devient blanc éclatant au survol */
+    transform: scale(1.05);
+}
+
+/* Ajustement mobile pour les logos */
+@media (max-width: 500px) {
+    .partners-logos {
+        gap: 25px;
+    }
+    .partner-logo {
+        height: 20px; /* Un peu plus petit sur mobile */
+    }
+}
+
+/* Ajustement du texte légal pour l'espacement */
+.legal-text {
+    margin-top: 20px;
+}

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIEWS - Statistiques</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Styles spécifiques à la page Stats */
+        .stats-container {
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .stats-header {
+            margin-bottom: 30px;
+        }
+
+        .stats-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stats-header p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .period-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .period-btn {
+            flex: 1;
+            padding: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .period-btn.active {
+            background: var(--accent-white);
+            color: var(--bg-dark);
+            border-color: var(--accent-white);
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+        }
+
+        .chart-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-white);
+            margin-bottom: 20px;
+        }
+
+        .chart-bar-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chart-bar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chart-bar-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            min-width: 80px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .chart-bar-fill {
+            height: 100%;
+            background: var(--accent-white);
+            border-radius: 4px;
+            transition: width 0.8s ease-out;
+        }
+
+        .chart-bar-value {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-white);
+            min-width: 50px;
+            text-align: right;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-mini-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-mini-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-mini-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-white);
+        }
+
+        .stat-mini-change {
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .stat-mini-change.positive {
+            color: var(--status-success);
+        }
+
+        .stat-mini-change.negative {
+            color: var(--error-color);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="header-left">
+            <img src="images/logo_views.jpg" alt="VIEWS" class="app-logo">
+        </div>
+        <div class="header-right">
+            <div class="user-profile">
+                <span class="user-name">Bonjour, Thomas</span>
+                <div class="avatar">T</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="stats-container">
+        <div class="stats-header">
+            <h1>Statistiques</h1>
+            <p>Vue d'ensemble de vos performances</p>
+        </div>
+
+        <div class="period-selector">
+            <button class="period-btn" data-period="week">Semaine</button>
+            <button class="period-btn active" data-period="month">Mois</button>
+            <button class="period-btn" data-period="year">Année</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-mini-card">
+                <div class="stat-mini-label">CA Total</div>
+                <div class="stat-mini-value">12 450 €</div>
+                <div class="stat-mini-change positive">+12% vs mois dernier</div>
+            </div>
+            <div class="stat-mini-card">
+                <div class="stat-mini-label">Ventes</div>
+                <div class="stat-mini-value">8</div>
+                <div class="stat-mini-change positive">+2 vs mois dernier</div>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-title">Taux de conversion</div>
+            <div class="chart-value">68%</div>
+            <div class="chart-bar-container">
+                <div class="chart-bar-item">
+                    <span class="chart-bar-label">Nouveaux</span>
+                    <div class="chart-bar">
+                        <div class="chart-bar-fill" style="width: 100%;"></div>
+                    </div>
+                    <span class="chart-bar-value">12</span>
+                </div>
+                <div class="chart-bar-item">
+                    <span class="chart-bar-label">En cours</span>
+                    <div class="chart-bar">
+                        <div class="chart-bar-fill" style="width: 50%;"></div>
+                    </div>
+                    <span class="chart-bar-value">6</span>
+                </div>
+                <div class="chart-bar-item">
+                    <span class="chart-bar-label">Ventes</span>
+                    <div class="chart-bar">
+                        <div class="chart-bar-fill" style="width: 66.7%;"></div>
+                    </div>
+                    <span class="chart-bar-value">8</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-title">Répartition par statut</div>
+            <div class="chart-bar-container">
+                <div class="chart-bar-item">
+                    <span class="chart-bar-label">Nouveau</span>
+                    <div class="chart-bar">
+                        <div class="chart-bar-fill" style="width: 30%; background: var(--status-new);"></div>
+                    </div>
+                    <span class="chart-bar-value">4</span>
+                </div>
+                <div class="chart-bar-item">
+                    <span class="chart-bar-label">En cours</span>
+                    <div class="chart-bar">
+                        <div class="chart-bar-fill" style="width: 50%; background: var(--status-pending);"></div>
+                    </div>
+                    <span class="chart-bar-value">6</span>
+                </div>
+                <div class="chart-bar-item">
+                    <span class="chart-bar-label">Vente</span>
+                    <div class="chart-bar">
+                        <div class="chart-bar-fill" style="width: 66.7%; background: var(--status-success);"></div>
+                    </div>
+                    <span class="chart-bar-value">8</span>
+                </div>
+                <div class="chart-bar-item">
+                    <span class="chart-bar-label">Archivé</span>
+                    <div class="chart-bar">
+                        <div class="chart-bar-fill" style="width: 10%; background: var(--status-archive);"></div>
+                    </div>
+                    <span class="chart-bar-value">2</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-title">Panier moyen</div>
+            <div class="chart-value">1 556 €</div>
+            <div class="stat-mini-change positive">+8% vs mois dernier</div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fa-solid fa-users"></i>
+            <span>Prospects</span>
+        </a>
+        <a href="stats.html" class="nav-item active">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Stats</span>
+        </a>
+        <a href="compte.html" class="nav-item">
+            <i class="fa-solid fa-gear"></i>
+            <span>Compte</span>
+        </a>
+    </nav>
+
+    <script>
+        // Gestion du sélecteur de période
+        document.querySelectorAll('.period-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                // Ici, on pourrait charger les données selon la période sélectionnée
+            });
+        });
+
+        // Animation des barres au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.querySelectorAll('.chart-bar-fill').forEach(bar => {
+                    const width = bar.style.width;
+                    bar.style.width = '0%';
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 100);
+                });
+            }, 300);
+        });
+    </script>
+</body>
+</html>
+
