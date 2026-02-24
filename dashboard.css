@@ -134,6 +134,9 @@ body {
     display: flex; align-items: center; justify-content: center; gap: 8px;
     transition: transform 0.1s ease-out, opacity 0.1s ease-out;
     user-select: none;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
 }
 .action-btn:active {
     transform: scale(0.95);
