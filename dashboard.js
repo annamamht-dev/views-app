@@ -19,18 +19,28 @@ const leadsData = {
     },
 };
 
-// Convertit un numéro FR (0XXXXXXXXX) au format international wa.me (33XXXXXXXXX)
-function toWaMe(phone) {
-    const digits = phone.replace(/\s/g, '');
-    const intl   = digits.startsWith('0') ? '33' + digits.slice(1) : digits;
-    return 'https://wa.me/' + intl;
-}
-
 // ============================================
 // ÉTAT COURANT
 // ============================================
-let currentLeadId   = null;
-let currentLeadCard = null;
+let currentLeadId    = null;
+let currentLeadCard  = null;
+let currentLeadPhone = null;
+
+// ============================================
+// ACTIONS CONTACT (déclenchées par onclick)
+// ============================================
+function contactWhatsapp() {
+    if (!currentLeadPhone) return;
+    var digits = currentLeadPhone.replace(/\D/g, '');
+    var intl   = digits.charAt(0) === '0' ? '33' + digits.slice(1) : digits;
+    window.location.href = 'https://wa.me/' + intl;
+}
+
+function contactPhone() {
+    if (!currentLeadPhone) return;
+    var digits = currentLeadPhone.replace(/\D/g, '');
+    window.location.href = 'tel:+33' + digits.slice(1);
+}
 
 // ============================================
 // OUVERTURE MODALE
@@ -44,15 +54,10 @@ function openLeadDetails(leadId) {
 
     // Populer les infos du prospect
     if (lead) {
+        currentLeadPhone = lead.phone;
         document.getElementById('modalName').textContent  = lead.nom;
         document.getElementById('modalPhone').textContent = lead.phone.replace(/(\d{2})(?=\d)/g, '$1 ').trim();
         document.getElementById('modalEmail').textContent = lead.email;
-
-        // Bouton WhatsApp → ouvre la conversation directement
-        document.getElementById('btnWhatsapp').href = toWaMe(lead.phone);
-
-        // Bouton Appeler → protocole tel:
-        document.getElementById('btnPhone').href = 'tel:' + lead.phone;
     }
 
     // Synchroniser le select de statut avec la carte
@@ -75,8 +80,9 @@ function openLeadDetails(leadId) {
 function closeLeadDetails() {
     document.getElementById('leadModal').classList.remove('active');
     document.body.style.overflow = 'auto';
-    currentLeadId   = null;
-    currentLeadCard = null;
+    currentLeadId    = null;
+    currentLeadCard  = null;
+    currentLeadPhone = null;
 }
 
 // Fermer en cliquant sur le fond
