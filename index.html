@@ -19,6 +19,15 @@
             <p class="subtitle">Veuillez compléter vos informations pour une prise en charge exclusive.</p>
         </header>
 
+        <!-- Bannière conseiller personnalisée (affichée si ?ref= présent) -->
+        <div class="advisor-banner" id="advisorBanner" style="display:none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;opacity:0.6">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span id="advisorText">Votre conseiller vous accompagne</span>
+        </div>
+
         <form class="premium-form" id="premiumForm" novalidate>
             
             <input type="hidden" name="commercial_id" id="commercial_id" value="">
@@ -129,5 +138,19 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Lien commercial personnalisé via ?ref=prenom
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const ref = params.get('ref');
+            if (ref) {
+                const name = ref.charAt(0).toUpperCase() + ref.slice(1).toLowerCase();
+                document.getElementById('commercial_id').value = ref;
+                document.getElementById('advisorText').innerHTML =
+                    'Votre conseiller <strong>' + name + '</strong> vous accompagne';
+                document.getElementById('advisorBanner').style.display = 'flex';
+            }
+        })();
+    </script>
 </body>
 </html>

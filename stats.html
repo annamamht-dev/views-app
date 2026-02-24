@@ -215,27 +215,27 @@
         </div>
 
         <div class="chart-card">
-            <div class="chart-title">Taux de conversion</div>
-            <div class="chart-value">68%</div>
+            <div class="chart-title">Entonnoir de conversion</div>
+            <div class="chart-value" id="conversionRate">0%</div>
             <div class="chart-bar-container">
                 <div class="chart-bar-item">
-                    <span class="chart-bar-label">Nouveaux</span>
+                    <span class="chart-bar-label">Prospects</span>
                     <div class="chart-bar">
-                        <div class="chart-bar-fill" style="width: 100%;"></div>
+                        <div class="chart-bar-fill" data-width="100"></div>
                     </div>
-                    <span class="chart-bar-value">12</span>
+                    <span class="chart-bar-value">16</span>
                 </div>
                 <div class="chart-bar-item">
-                    <span class="chart-bar-label">En cours</span>
+                    <span class="chart-bar-label">Traités</span>
                     <div class="chart-bar">
-                        <div class="chart-bar-fill" style="width: 50%;"></div>
+                        <div class="chart-bar-fill" data-width="81"></div>
                     </div>
-                    <span class="chart-bar-value">6</span>
+                    <span class="chart-bar-value">13</span>
                 </div>
                 <div class="chart-bar-item">
                     <span class="chart-bar-label">Ventes</span>
                     <div class="chart-bar">
-                        <div class="chart-bar-fill" style="width: 66.7%;"></div>
+                        <div class="chart-bar-fill" data-width="50"></div>
                     </div>
                     <span class="chart-bar-value">8</span>
                 </div>
@@ -248,28 +248,28 @@
                 <div class="chart-bar-item">
                     <span class="chart-bar-label">Nouveau</span>
                     <div class="chart-bar">
-                        <div class="chart-bar-fill" style="width: 30%; background: var(--status-new);"></div>
+                        <div class="chart-bar-fill" data-width="19" style="background: var(--status-new);"></div>
                     </div>
-                    <span class="chart-bar-value">4</span>
+                    <span class="chart-bar-value">3</span>
                 </div>
                 <div class="chart-bar-item">
                     <span class="chart-bar-label">En cours</span>
                     <div class="chart-bar">
-                        <div class="chart-bar-fill" style="width: 50%; background: var(--status-pending);"></div>
+                        <div class="chart-bar-fill" data-width="19" style="background: var(--status-pending);"></div>
                     </div>
-                    <span class="chart-bar-value">6</span>
+                    <span class="chart-bar-value">3</span>
                 </div>
                 <div class="chart-bar-item">
                     <span class="chart-bar-label">Vente</span>
                     <div class="chart-bar">
-                        <div class="chart-bar-fill" style="width: 66.7%; background: var(--status-success);"></div>
+                        <div class="chart-bar-fill" data-width="50" style="background: var(--status-success);"></div>
                     </div>
                     <span class="chart-bar-value">8</span>
                 </div>
                 <div class="chart-bar-item">
                     <span class="chart-bar-label">Archivé</span>
                     <div class="chart-bar">
-                        <div class="chart-bar-fill" style="width: 10%; background: var(--status-archive);"></div>
+                        <div class="chart-bar-fill" data-width="13" style="background: var(--status-archive);"></div>
                     </div>
                     <span class="chart-bar-value">2</span>
                 </div>
@@ -278,7 +278,7 @@
 
         <div class="chart-card">
             <div class="chart-title">Panier moyen</div>
-            <div class="chart-value">1 556 €</div>
+            <div class="chart-value" id="panierMoyen">0 €</div>
             <div class="stat-mini-change positive">+8% vs mois dernier</div>
         </div>
     </div>
@@ -292,6 +292,10 @@
             <i class="fa-solid fa-chart-pie"></i>
             <span>Stats</span>
         </a>
+        <a href="manager.html" class="nav-item">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Manager</span>
+        </a>
         <a href="compte.html" class="nav-item">
             <i class="fa-solid fa-gear"></i>
             <span>Compte</span>
@@ -299,26 +303,69 @@
     </nav>
 
     <script>
-        // Gestion du sélecteur de période
+        // ============================================
+        // PÉRIODE SELECTOR
+        // ============================================
         document.querySelectorAll('.period-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                // Ici, on pourrait charger les données selon la période sélectionnée
             });
         });
 
-        // Animation des barres au chargement
+        // ============================================
+        // ANIMATION COMPTEUR (ex: 0 → 57%)
+        // ============================================
+        function animateCounter(el, targetValue, suffix, duration) {
+            duration = duration || 1000;
+            const startTime = performance.now();
+
+            function update(currentTime) {
+                const elapsed  = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                // Ease-out cubique
+                const eased    = 1 - Math.pow(1 - progress, 3);
+                const current  = Math.round(eased * targetValue);
+
+                if (suffix === '€') {
+                    el.textContent = current.toLocaleString('fr-FR') + ' €';
+                } else {
+                    el.textContent = current + suffix;
+                }
+
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
+
+        // ============================================
+        // ANIMATION BARRES — lecture depuis data-width
+        // ============================================
+        function animateBars() {
+            document.querySelectorAll('.chart-bar-fill').forEach(function(bar, index) {
+                const target = parseFloat(bar.getAttribute('data-width')) || 0;
+                bar.style.width = '0%';
+                // Forcer un reflow pour que le navigateur "voit" la largeur 0
+                bar.getBoundingClientRect();
+
+                // Décalage en cascade pour un effet visuel premium
+                setTimeout(function() {
+                    bar.style.width = target + '%';
+                }, 80 + index * 60);
+            });
+        }
+
+        // ============================================
+        // INIT AU CHARGEMENT
+        // ============================================
         document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => {
-                document.querySelectorAll('.chart-bar-fill').forEach(bar => {
-                    const width = bar.style.width;
-                    bar.style.width = '0%';
-                    setTimeout(() => {
-                        bar.style.width = width;
-                    }, 100);
-                });
-            }, 300);
+            // Légère attente pour que l'animation fadeIn du body soit visible
+            setTimeout(function() {
+                animateBars();
+                // Compteurs pour les grandes valeurs
+                animateCounter(document.getElementById('conversionRate'), 57, '%', 1000);
+                animateCounter(document.getElementById('panierMoyen'), 1556, '€', 1200);
+            }, 400);
         });
     </script>
 </body>

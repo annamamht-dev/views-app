@@ -348,6 +348,10 @@
             <i class="fa-solid fa-chart-pie"></i>
             <span>Stats</span>
         </a>
+        <a href="manager.html" class="nav-item">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Manager</span>
+        </a>
         <a href="compte.html" class="nav-item active">
             <i class="fa-solid fa-gear"></i>
             <span>Compte</span>
@@ -365,8 +369,7 @@
         // Gestion du bouton de déconnexion
         document.querySelector('.logout-btn').addEventListener('click', function() {
             if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-                // Ici, on pourrait rediriger vers la page de connexion
-                alert('Déconnexion...');
+                window.location.href = 'login.html';
             }
         });
     </script>

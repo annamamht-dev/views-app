@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIEWS - Vue Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #1e1e1e;
+            --bg-darker: #000000;
+            --bg-card: #2a2a2a;
+            --bg-card-hover: #333333;
+            --text-primary: #ffffff;
+            --text-secondary: #aaaaaa;
+            --accent-white: #ffffff;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --status-new: #3498db;
+            --status-pending: #f1c40f;
+            --status-success: #2ecc71;
+            --status-archive: #95a5a6;
+            --error-color: #ff4d4d;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-darker);
+            color: var(--text-primary);
+            padding-bottom: 100px;
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* HEADER */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: var(--bg-darker);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .app-logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: var(--text-primary);
+        }
+
+        .manager-badge {
+            font-size: 10px;
+            background: var(--accent-white);
+            color: var(--bg-darker);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-name { font-size: 14px; font-weight: 500; }
+        .avatar {
+            width: 35px;
+            height: 35px;
+            background: var(--accent-white);
+            color: var(--bg-darker);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        /* PAGE CONTENT */
+        .page-content { padding: 20px; }
+
+        /* PERIODE SELECTOR */
+        .period-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .period-btn {
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .period-btn.active {
+            background: var(--accent-white);
+            color: var(--bg-darker);
+            border-color: var(--accent-white);
+        }
+
+        /* KPI GLOBAUX */
+        .kpi-global {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card.highlight {
+            background: var(--accent-white);
+            border-color: var(--accent-white);
+        }
+
+        .kpi-card.highlight .kpi-label,
+        .kpi-card.highlight .kpi-change {
+            color: rgba(0,0,0,0.5);
+        }
+
+        .kpi-card.highlight .kpi-value {
+            color: var(--bg-darker);
+        }
+
+        .kpi-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .kpi-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent-white);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .kpi-change {
+            font-size: 11px;
+            color: var(--status-success);
+        }
+
+        .kpi-change.negative { color: var(--error-color); }
+
+        /* SECTION TITRE */
+        .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* CLASSEMENT COMMERCIAUX */
+        .commercial-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .commercial-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .commercial-card:active {
+            transform: scale(0.99);
+            background: var(--bg-card-hover);
+        }
+
+        .commercial-card.top-performer {
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .commercial-card.top-performer::before {
+            content: '★ TOP';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--status-success);
+        }
+
+        .commercial-top-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .commercial-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .commercial-info { flex: 1; }
+
+        .commercial-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .commercial-role {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .commercial-ca {
+            text-align: right;
+        }
+
+        .ca-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--status-success);
+            display: block;
+        }
+
+        .ca-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        /* BARRE DE PROGRESSION COMMERCIAL */
+        .progress-bar-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .progress-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            min-width: 70px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 5px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease-out;
+        }
+
+        .progress-fill.blue { background: var(--status-new); }
+        .progress-fill.yellow { background: var(--status-pending); }
+        .progress-fill.green { background: var(--status-success); }
+        .progress-fill.gray { background: var(--status-archive); }
+
+        .progress-count {
+            font-size: 11px;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: right;
+            color: var(--text-secondary);
+        }
+
+        /* OBJECTIF MENSUEL */
+        .objectif-section {
+            margin-bottom: 30px;
+        }
+
+        .objectif-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .objectif-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .objectif-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .objectif-subtitle {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .objectif-percent {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--status-success);
+        }
+
+        .big-progress {
+            height: 8px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .big-progress-fill {
+            height: 100%;
+            background: var(--status-success);
+            border-radius: 4px;
+            transition: width 1.2s ease-out;
+        }
+
+        .objectif-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* DERNIÈRES ACTIVITÉS */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-dot-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 4px;
+        }
+
+        .activity-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .activity-dot.new { background: var(--status-new); }
+        .activity-dot.success { background: var(--status-success); }
+        .activity-dot.pending { background: var(--status-pending); }
+        .activity-dot.archive { background: var(--status-archive); }
+
+        .activity-content { flex: 1; }
+
+        .activity-text {
+            font-size: 13px;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+            line-height: 1.4;
+        }
+
+        .activity-text strong { font-weight: 600; }
+
+        .activity-meta {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .activity-amount {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--status-success);
+            white-space: nowrap;
+        }
+
+        /* BOTTOM NAV */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(42, 42, 42, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            z-index: 90;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 10px;
+        }
+
+        .nav-item i { font-size: 20px; }
+        .nav-item.active { color: var(--accent-white); }
+
+        /* ANIMATIONS ENTRÉE */
+        .animate-up {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+
+        /* MODAL COMMERCIAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0);
+            z-index: 1000;
+            display: none;
+            align-items: flex-end;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            background: rgba(0,0,0,0.85);
+        }
+
+        .modal-content {
+            background: var(--bg-dark);
+            width: 100%;
+            max-height: 85vh;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .modal-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-commercial-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-avatar-large {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--accent-white);
+            color: var(--bg-darker);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .modal-commercial-info h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .modal-commercial-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .modal-kpi-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .modal-kpi {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .modal-kpi-val {
+            font-size: 18px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .modal-kpi-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .modal-section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .modal-lead-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: var(--bg-card);
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .modal-lead-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .modal-lead-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .modal-lead-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        .dot-new { background: var(--status-new); }
+        .dot-pending { background: var(--status-pending); }
+        .dot-success { background: var(--status-success); }
+        .dot-archive { background: var(--status-archive); }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <div style="display:flex;align-items:center;gap:12px;">
+            <img src="images/logo_views.jpg" alt="VIEWS" style="width:70px;height:auto;display:block;">
+            <span class="manager-badge">Manager</span>
+        </div>
+        <div class="header-right">
+            <span class="user-name">Sophie</span>
+            <div class="avatar">S</div>
+        </div>
+    </header>
+
+    <div class="page-content">
+
+        <!-- PÉRIODE -->
+        <div class="period-bar animate-up delay-1">
+            <button class="period-btn" data-period="week">Semaine</button>
+            <button class="period-btn active" data-period="month">Mois</button>
+            <button class="period-btn" data-period="year">Année</button>
+        </div>
+
+        <!-- KPI GLOBAUX -->
+        <div class="kpi-global animate-up delay-2">
+            <div class="kpi-card highlight">
+                <span class="kpi-label">CA Total Équipe</span>
+                <span class="kpi-value" id="totalCA">28 450 €</span>
+                <span class="kpi-change">+18% vs oct.</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Ventes Total</span>
+                <span class="kpi-value" id="totalVentes">19</span>
+                <span class="kpi-change">+5 vs oct.</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Prospects</span>
+                <span class="kpi-value" id="totalProspects">34</span>
+                <span class="kpi-change">ce mois</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Conversion</span>
+                <span class="kpi-value">56%</span>
+                <span class="kpi-change">+4pts vs oct.</span>
+            </div>
+        </div>
+
+        <!-- OBJECTIF MENSUEL -->
+        <div class="objectif-section animate-up delay-3">
+            <div class="section-title">Objectif mensuel</div>
+            <div class="objectif-card">
+                <div class="objectif-header">
+                    <div>
+                        <div class="objectif-title">CA Novembre</div>
+                        <div class="objectif-subtitle">Objectif : 35 000 €</div>
+                    </div>
+                    <div class="objectif-percent" id="objectifPercent">0%</div>
+                </div>
+                <div class="big-progress">
+                    <div class="big-progress-fill" id="bigProgressFill" style="width: 0%;"></div>
+                </div>
+                <div class="objectif-details">
+                    <span>28 450 € réalisés</span>
+                    <span>6 550 € restants</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CLASSEMENT COMMERCIAUX -->
+        <div class="animate-up delay-3">
+            <div class="section-title">Performance par commercial</div>
+            <div class="commercial-list" id="commercialList"></div>
+        </div>
+
+        <!-- DERNIÈRES ACTIVITÉS -->
+        <div class="animate-up delay-4">
+            <div class="section-title">Activité récente</div>
+            <div class="activity-list" id="activityList"></div>
+        </div>
+
+    </div>
+
+    <!-- MODAL DÉTAIL COMMERCIAL -->
+    <div id="commercialModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close-btn" onclick="closeModal()">
+                    <i class="fa-solid fa-arrow-left"></i> Retour
+                </button>
+                <span class="modal-title">Fiche Commercial</span>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fa-solid fa-users"></i>
+            <span>Prospects</span>
+        </a>
+        <a href="stats.html" class="nav-item">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Stats</span>
+        </a>
+        <a href="manager.html" class="nav-item active">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Manager</span>
+        </a>
+        <a href="compte.html" class="nav-item">
+            <i class="fa-solid fa-gear"></i>
+            <span>Compte</span>
+        </a>
+    </nav>
+
+    <script>
+    // ============================================
+    // DATA COMMERCIAUX
+    // ============================================
+    const commerciaux = [
+        {
+            id: 'c1',
+            nom: 'Thomas Dubois',
+            initiale: 'T',
+            role: 'Commercial Senior',
+            ca: 12450,
+            ventes: 8,
+            prospects: 14,
+            taux: 57,
+            panierMoyen: 1556,
+            new: 3, pending: 3, success: 8, archive: 2,
+            leads: [
+                { nom: 'Claire Fontaine', time: '24 oct.', status: 'success', amount: 1200 },
+                { nom: 'Pierre Garnier', time: '19 oct.', status: 'success', amount: 1850 },
+                { nom: 'Sophie Martin', time: "Aujourd'hui", status: 'new', amount: null },
+                { nom: 'Jean Dupont', time: 'Hier', status: 'pending', amount: null },
+            ]
+        },
+        {
+            id: 'c2',
+            nom: 'Marie Lecomte',
+            initiale: 'M',
+            role: 'Commercial Senior',
+            ca: 10200,
+            ventes: 7,
+            prospects: 11,
+            taux: 64,
+            panierMoyen: 1457,
+            new: 1, pending: 2, success: 7, archive: 1,
+            leads: [
+                { nom: 'Aurélie Blanc', time: '23 oct.', status: 'success', amount: 1600 },
+                { nom: 'David Morel', time: '21 oct.', status: 'success', amount: 980 },
+                { nom: 'Lucie Renard', time: 'Hier', status: 'pending', amount: null },
+            ]
+        },
+        {
+            id: 'c3',
+            nom: 'Alex Bourgeois',
+            initiale: 'A',
+            role: 'Commercial Junior',
+            ca: 5800,
+            ventes: 4,
+            prospects: 9,
+            taux: 44,
+            panierMoyen: 1450,
+            new: 2, pending: 2, success: 4, archive: 1,
+            leads: [
+                { nom: 'Nicolas Faure', time: '22 oct.', status: 'success', amount: 1750 },
+                { nom: 'Emma Girard', time: "Aujourd'hui", status: 'new', amount: null },
+                { nom: 'Julien Roux', time: '20 oct.', status: 'pending', amount: null },
+            ]
+        }
+    ];
+
+    const activities = [
+        { type: 'success', commercial: 'Thomas D.', action: 'Vente validée', client: 'Claire Fontaine', amount: 1200, time: 'Il y a 1h' },
+        { type: 'new', commercial: 'Thomas D.', action: 'Nouveau prospect', client: 'Thomas Chevalier', amount: null, time: 'Il y a 2h' },
+        { type: 'success', commercial: 'Marie L.', action: 'Vente validée', client: 'Aurélie Blanc', amount: 1600, time: 'Hier, 17h30' },
+        { type: 'pending', commercial: 'Alex B.', action: 'Devis envoyé', client: 'Julien Roux', amount: null, time: 'Hier, 15h00' },
+        { type: 'new', commercial: 'Alex B.', action: 'Nouveau prospect', client: 'Emma Girard', amount: null, time: 'Hier, 11h20' },
+        { type: 'success', commercial: 'Marie L.', action: 'Vente validée', client: 'David Morel', amount: 980, time: '21 oct.' },
+    ];
+
+    // ============================================
+    // RENDER COMMERCIAUX
+    // ============================================
+    const maxCA = Math.max(...commerciaux.map(c => c.ca));
+
+    function renderCommerciaux() {
+        const sorted = [...commerciaux].sort((a, b) => b.ca - a.ca);
+        const list = document.getElementById('commercialList');
+
+        list.innerHTML = sorted.map((c, i) => {
+            const totalLeads = c.new + c.pending + c.success + c.archive;
+            return `
+            <div class="commercial-card ${i === 0 ? 'top-performer' : ''}" onclick="openCommercial('${c.id}')">
+                <div class="commercial-top-row">
+                    <div class="commercial-avatar">${c.initiale}</div>
+                    <div class="commercial-info">
+                        <div class="commercial-name">${c.nom}</div>
+                        <div class="commercial-role">${c.role} · ${c.ventes} ventes · ${c.taux}%</div>
+                    </div>
+                    <div class="commercial-ca">
+                        <span class="ca-value">${c.ca.toLocaleString('fr-FR')} €</span>
+                        <span class="ca-label">CA mois</span>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-row">
+                        <span class="progress-label" style="color:var(--status-new)">Nouveaux</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill blue" style="width:${(c.new/totalLeads)*100}%"></div>
+                        </div>
+                        <span class="progress-count">${c.new}</span>
+                    </div>
+                    <div class="progress-row">
+                        <span class="progress-label" style="color:var(--status-pending)">En cours</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill yellow" style="width:${(c.pending/totalLeads)*100}%"></div>
+                        </div>
+                        <span class="progress-count">${c.pending}</span>
+                    </div>
+                    <div class="progress-row">
+                        <span class="progress-label" style="color:var(--status-success)">Ventes</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill green" style="width:${(c.success/totalLeads)*100}%"></div>
+                        </div>
+                        <span class="progress-count">${c.success}</span>
+                    </div>
+                </div>
+            </div>
+        `}).join('');
+    }
+
+    // ============================================
+    // RENDER ACTIVITÉS
+    // ============================================
+    function renderActivities() {
+        const list = document.getElementById('activityList');
+        list.innerHTML = activities.map(a => `
+            <div class="activity-item">
+                <div class="activity-dot-wrap">
+                    <div class="activity-dot ${a.type}"></div>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-text">
+                        <strong>${a.commercial}</strong> — ${a.action} · <span style="color:var(--text-secondary)">${a.client}</span>
+                    </div>
+                    <div class="activity-meta">${a.time}</div>
+                </div>
+                ${a.amount ? `<div class="activity-amount">+${a.amount.toLocaleString('fr-FR')} €</div>` : ''}
+            </div>
+        `).join('');
+    }
+
+    // ============================================
+    // MODAL COMMERCIAL
+    // ============================================
+    function openCommercial(id) {
+        const c = commerciaux.find(x => x.id === id);
+        if (!c) return;
+
+        const body = document.getElementById('modalBody');
+        body.innerHTML = `
+            <div class="modal-commercial-header">
+                <div class="modal-avatar-large">${c.initiale}</div>
+                <div class="modal-commercial-info">
+                    <h2>${c.nom}</h2>
+                    <p>${c.role}</p>
+                </div>
+            </div>
+
+            <div class="modal-kpi-row">
+                <div class="modal-kpi">
+                    <span class="modal-kpi-val" style="color:var(--status-success)">${c.ca.toLocaleString('fr-FR')} €</span>
+                    <span class="modal-kpi-label">CA mois</span>
+                </div>
+                <div class="modal-kpi">
+                    <span class="modal-kpi-val">${c.ventes}</span>
+                    <span class="modal-kpi-label">Ventes</span>
+                </div>
+                <div class="modal-kpi">
+                    <span class="modal-kpi-val">${c.taux}%</span>
+                    <span class="modal-kpi-label">Conversion</span>
+                </div>
+            </div>
+
+            <div class="modal-kpi-row">
+                <div class="modal-kpi">
+                    <span class="modal-kpi-val">${c.prospects}</span>
+                    <span class="modal-kpi-label">Prospects</span>
+                </div>
+                <div class="modal-kpi">
+                    <span class="modal-kpi-val">${c.panierMoyen.toLocaleString('fr-FR')} €</span>
+                    <span class="modal-kpi-label">Panier moy.</span>
+                </div>
+                <div class="modal-kpi">
+                    <span class="modal-kpi-val">${c.archive}</span>
+                    <span class="modal-kpi-label">Archivés</span>
+                </div>
+            </div>
+
+            <div class="modal-section-title">Derniers prospects</div>
+            ${c.leads.map(l => `
+                <div class="modal-lead-item">
+                    <div>
+                        <div class="modal-lead-name">${l.nom}</div>
+                        <div class="modal-lead-time">${l.time}</div>
+                    </div>
+                    <div class="modal-lead-status">
+                        ${l.amount ? `<span style="color:var(--status-success);font-weight:600;font-size:13px;">+${l.amount.toLocaleString('fr-FR')} €</span>` : `<span class="status-dot dot-${l.status}"></span>${l.status === 'new' ? 'Nouveau' : l.status === 'pending' ? 'En cours' : 'Archivé'}`}
+                    </div>
+                </div>
+            `).join('')}
+        `;
+
+        document.getElementById('commercialModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        document.getElementById('commercialModal').classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    document.getElementById('commercialModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+    // ============================================
+    // PÉRIODE
+    // ============================================
+    document.querySelectorAll('.period-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // ============================================
+    // ANIMATION OBJECTIF
+    // ============================================
+    function animateObjectif() {
+        const target = 81; // 28450/35000
+        const fill = document.getElementById('bigProgressFill');
+        const percent = document.getElementById('objectifPercent');
+
+        setTimeout(() => {
+            fill.style.width = target + '%';
+            let current = 0;
+            const interval = setInterval(() => {
+                current += 2;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(interval);
+                }
+                percent.textContent = current + '%';
+            }, 20);
+        }, 600);
+    }
+
+    // ============================================
+    // INIT
+    // ============================================
+    renderCommerciaux();
+    renderActivities();
+    animateObjectif();
+    </script>
+</body>
+</html>
