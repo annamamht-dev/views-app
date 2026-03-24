@@ -262,3 +262,66 @@ body {
 .legal-text {
     margin-top: 20px;
 }
+
+/* --- CASE RGPD --- */
+.rgpd-checkbox-group {
+    margin-bottom: 24px;
+}
+
+.rgpd-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.rgpd-label input[type="checkbox"] {
+    display: none;
+}
+
+.rgpd-custom-checkbox {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: transparent;
+    transition: var(--transition);
+    position: relative;
+}
+
+.rgpd-label input[type="checkbox"]:checked + .rgpd-custom-checkbox {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.rgpd-label input[type="checkbox"]:checked + .rgpd-custom-checkbox::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    width: 5px;
+    height: 9px;
+    border: 2px solid #000;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+}
+
+.rgpd-custom-checkbox.invalid {
+    border-color: var(--error-color);
+    animation: shake 0.5s ease-in-out;
+}
+
+.rgpd-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.rgpd-link {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}

@@ -115,6 +115,17 @@ function validateForm() {
         }
     });
     
+    // Validation RGPD
+    const rgpdCheckbox = document.getElementById('rgpdConsent');
+    if (rgpdCheckbox && !rgpdCheckbox.checked) {
+        isValid = false;
+        const customCheckbox = rgpdCheckbox.nextElementSibling;
+        if (customCheckbox) {
+            customCheckbox.classList.add('invalid');
+            setTimeout(() => customCheckbox.classList.remove('invalid'), 600);
+        }
+    }
+
     if (!isValid) {
         // Message discret sans alert
         const errorMsg = document.createElement('div');
@@ -124,7 +135,7 @@ function validateForm() {
             border-radius: 8px; font-size: 13px; z-index: 1000;
             animation: fadeIn 0.3s ease;
         `;
-        errorMsg.textContent = 'Veuillez remplir tous les champs obligatoires et ajouter vos documents.';
+        errorMsg.textContent = 'Veuillez remplir tous les champs obligatoires et accepter le RGPD.';
         document.body.appendChild(errorMsg);
         setTimeout(() => {
             errorMsg.style.opacity = '0';
